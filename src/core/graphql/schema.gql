@@ -14,7 +14,7 @@ type Query {
 type UserModel {
   avatar: String
   bio: String
-  cretedAt: DateTime!
+  createdAt: DateTime!
   displayName: String!
   email: String!
   id: ID!

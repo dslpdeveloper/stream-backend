@@ -1,28 +1,28 @@
-import { NestFactory } from '@nestjs/core';
-import { ConfigService } from '@nestjs/config';
-import * as cookieParser from 'cookie-parser';
-import { ValidationPipe } from '@nestjs/common';
-import * as session from 'express-session';
-import { RedisStore } from 'connect-redis';
+import { ValidationPipe } from '@nestjs/common'
+import { ConfigService } from '@nestjs/config'
+import { NestFactory } from '@nestjs/core'
+import { RedisStore } from 'connect-redis'
+import * as cookieParser from 'cookie-parser'
+import * as session from 'express-session'
 
-import { CoreModule } from './core/core.module';
-import { ms, type StringValue } from './shared/utils/ms.util';
-import { parseBoolean } from './shared/utils/parse-boolean.utils';
-import { RedisService } from './core/redis/redis.service';
+import { CoreModule } from './core/core.module'
+import { RedisService } from './core/redis/redis.service'
+import { ms, type StringValue } from './shared/utils/ms.util'
+import { parseBoolean } from './shared/utils/parse-boolean.utils'
 
 async function bootstrap() {
-  const app = await NestFactory.create(CoreModule);
+	const app = await NestFactory.create(CoreModule)
 
-  const config = app.get(ConfigService);
-  const redis = app.get(RedisService);
+	const config = app.get(ConfigService)
+	const redis = app.get(RedisService)
 
-  app.use(cookieParser(config.getOrThrow<string>('COOKIES_SECRET')));
+	app.use(cookieParser(config.getOrThrow<string>('COOKIES_SECRET')))
 
-  app.useGlobalPipes(
-    new ValidationPipe({
-      transform: true
-    })
-  );
+	app.useGlobalPipes(
+		new ValidationPipe({
+			transform: true
+		})
+	)
 
 	app.use(
 		session({
@@ -48,12 +48,12 @@ async function bootstrap() {
 		})
 	)
 
-  app.enableCors({
-    origin: config.getOrThrow<string>('ALLOWED_ORIGIN'),
-    credentials: true,
-    exposedHeaders: ['Set-Cookie']
-  })
+	app.enableCors({
+		origin: config.getOrThrow<string>('ALLOWED_ORIGIN'),
+		credentials: true,
+		exposedHeaders: ['Set-Cookie']
+	})
 
-  await app.listen(config.getOrThrow<number>('APPLICATION_PORT'));
+	await app.listen(config.getOrThrow<number>('APPLICATION_PORT'))
 }
-bootstrap();
+bootstrap()
